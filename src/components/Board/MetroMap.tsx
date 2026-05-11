@@ -253,48 +253,6 @@ export const MetroMap: React.FC<MetroMapProps> = ({ lines, onStationClick, canIn
             </g>
           ))}
 
-        {/* Line legend in bottom-left corner */}
-        {lines.map((line, idx) => {
-          const legendX = 20; // Position from left edge
-          const legendY = height - 60 - (lines.length - 1 - idx) * 40; // Bottom up
-          return (
-            <g key={`legend-${line.id}`}>
-              <rect
-                x={legendX}
-                y={legendY}
-                width="120"
-                height="32"
-                rx="16"
-                fill="white"
-                stroke={line.color}
-                strokeWidth="2"
-                opacity={line.active ? 1 : 0.6}
-                className="transition-all"
-              />
-              <circle
-                cx={legendX + 18}
-                cy={legendY + 16}
-                r="8"
-                fill={line.color}
-              />
-              <text
-                x={legendX + 35}
-                y={legendY + 16}
-                dominantBaseline="middle"
-                fill={line.color}
-                fontSize="14"
-                fontWeight="bold"
-              >
-                {line.name}
-              </text>
-              {line.completed && (
-                <text x={legendX + 95} y={legendY + 16} fontSize="18" dominantBaseline="middle">
-                  ✓
-                </text>
-              )}
-            </g>
-          );
-        })}
       </svg>
     </div>
   );
