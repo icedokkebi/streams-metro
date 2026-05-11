@@ -253,44 +253,47 @@ export const MetroMap: React.FC<MetroMapProps> = ({ lines, onStationClick, canIn
             </g>
           ))}
 
-        {/* Line legend in top-left corner */}
-        {lines.map((line, idx) => (
-          <g key={`legend-${line.id}`}>
-            <rect
-              x="20"
-              y={20 + idx * 40}
-              width="120"
-              height="32"
-              rx="16"
-              fill="white"
-              stroke={line.color}
-              strokeWidth="2"
-              opacity={line.active ? 1 : 0.6}
-              className="transition-all"
-            />
-            <circle
-              cx="38"
-              cy={36 + idx * 40}
-              r="8"
-              fill={line.color}
-            />
-            <text
-              x="55"
-              y={36 + idx * 40}
-              dominantBaseline="middle"
-              fill={line.color}
-              fontSize="14"
-              fontWeight="bold"
-            >
-              {line.name}
-            </text>
-            {line.completed && (
-              <text x="115" y={36 + idx * 40} fontSize="18" dominantBaseline="middle">
-                ✓
+        {/* Line legend in top-right corner */}
+        {lines.map((line, idx) => {
+          const legendX = width - 140; // Position from right edge
+          return (
+            <g key={`legend-${line.id}`}>
+              <rect
+                x={legendX}
+                y={20 + idx * 40}
+                width="120"
+                height="32"
+                rx="16"
+                fill="white"
+                stroke={line.color}
+                strokeWidth="2"
+                opacity={line.active ? 1 : 0.6}
+                className="transition-all"
+              />
+              <circle
+                cx={legendX + 18}
+                cy={36 + idx * 40}
+                r="8"
+                fill={line.color}
+              />
+              <text
+                x={legendX + 35}
+                y={36 + idx * 40}
+                dominantBaseline="middle"
+                fill={line.color}
+                fontSize="14"
+                fontWeight="bold"
+              >
+                {line.name}
               </text>
-            )}
-          </g>
-        ))}
+              {line.completed && (
+                <text x={legendX + 95} y={36 + idx * 40} fontSize="18" dominantBaseline="middle">
+                  ✓
+                </text>
+              )}
+            </g>
+          );
+        })}
       </svg>
     </div>
   );

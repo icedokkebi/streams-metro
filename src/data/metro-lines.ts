@@ -29,29 +29,56 @@ export const generateRandomBoard = (
     () => Math.floor(Math.random() * 4) + 9
   );
 
-  // PRE-DETERMINE transfer stations
+  // PRE-DETERMINE transfer stations with minimum 5 station spacing
   const plannedTransfers: TransferPoint[] = [];
+  const MIN_TRANSFER_SPACING = 5; // Minimum distance between transfers
 
   if (lineCount > 1 && transferCount > 0) {
     // Create specified number of transfers
-    for (let t = 0; t < transferCount; t++) {
-      const line1 = 0;
-      const line2 = 1;
+    const line1 = 0;
+    const line2 = 1;
 
-      // Spread transfers evenly
-      const minStation = Math.max(2, Math.floor(lineLengths[0] * 0.2));
-      const maxStation = Math.floor(lineLengths[0] * 0.8);
-      const stationRange = maxStation - minStation;
+    // Calculate available range for transfers
+    const minStation = Math.max(2, Math.floor(lineLengths[0] * 0.2));
+    const maxStation = Math.floor(lineLengths[0] * 0.8);
+    const availableRange = maxStation - minStation;
 
-      const station1 = minStation + Math.floor((stationRange / (transferCount + 1)) * (t + 1));
-      const station2 = station1;
+    // Check if we have enough space for all transfers with minimum spacing
+    const requiredSpace = (transferCount - 1) * MIN_TRANSFER_SPACING;
 
-      plannedTransfers.push({
-        line1,
-        line2,
-        station1,
-        station2,
-      });
+    if (availableRange >= requiredSpace) {
+      // Calculate spacing between transfers
+      const spacing = Math.max(MIN_TRANSFER_SPACING, Math.floor(availableRange / (transferCount + 1)));
+
+      for (let t = 0; t < transferCount; t++) {
+        const station1 = minStation + spacing * (t + 1);
+        const station2 = station1;
+
+        // Ensure station is within bounds
+        if (station1 <= maxStation) {
+          plannedTransfers.push({
+            line1,
+            line2,
+            station1,
+            station2,
+          });
+        }
+      }
+    } else {
+      // Not enough space, create fewer transfers with minimum spacing
+      let currentStation = minStation + MIN_TRANSFER_SPACING;
+      let transfersAdded = 0;
+
+      while (currentStation <= maxStation && transfersAdded < transferCount) {
+        plannedTransfers.push({
+          line1,
+          line2,
+          station1: currentStation,
+          station2: currentStation,
+        });
+        currentStation += MIN_TRANSFER_SPACING;
+        transfersAdded++;
+      }
     }
   }
 
