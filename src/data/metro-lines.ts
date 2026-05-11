@@ -147,7 +147,7 @@ function generateZigzagPath(
   height: number,
   lineIndex: number,
   totalLines: number,
-  transferCount: 0 | 1 | 2 | 3
+  _transferCount: 0 | 1 | 2 | 3
 ): Point[] {
   const points: Point[] = [];
   const marginX = 80;
@@ -158,49 +158,10 @@ function generateZigzagPath(
   const lineSpacing = totalLines > 1 ? (height - 2 * marginY) / (totalLines - 1) : 0;
   const baseY = marginY + (lineIndex * lineSpacing);
 
-  if (transferCount === 0) {
-    // No transfers: straight horizontal line
-    for (let i = 0; i < stationCount; i++) {
-      const x = marginX + (i * stationSpacing);
-      points.push({ x, y: baseY });
-    }
-  } else {
-    // Zigzag pattern for transfers
-    const zigzagAmplitude = 40; // Height of zigzag
-    const zigzagPeriod = Math.max(2, Math.floor(stationCount / (transferCount + 1))); // Stations per zigzag
-
-    for (let i = 0; i < stationCount; i++) {
-      const x = marginX + (i * stationSpacing);
-
-      // Calculate zigzag Y position
-      const cyclePosition = i % zigzagPeriod;
-      const cycleProgress = cyclePosition / zigzagPeriod;
-
-      let yOffset: number;
-
-      if (lineIndex === 0) {
-        // First line: up-down zigzag (starts up)
-        // 0 -> 0.5: go down, 0.5 -> 1.0: go up
-        if (cycleProgress < 0.5) {
-          yOffset = -zigzagAmplitude + (cycleProgress * 2 * zigzagAmplitude);
-        } else {
-          yOffset = zigzagAmplitude - ((cycleProgress - 0.5) * 2 * zigzagAmplitude);
-        }
-      } else if (lineIndex === 1) {
-        // Second line: down-up zigzag (opposite, starts down)
-        if (cycleProgress < 0.5) {
-          yOffset = zigzagAmplitude - (cycleProgress * 2 * zigzagAmplitude);
-        } else {
-          yOffset = -zigzagAmplitude + ((cycleProgress - 0.5) * 2 * zigzagAmplitude);
-        }
-      } else {
-        // Third line: different pattern
-        yOffset = Math.sin(cycleProgress * Math.PI * 2) * zigzagAmplitude;
-      }
-
-      const y = baseY + yOffset;
-      points.push({ x, y });
-    }
+  // ALWAYS use straight horizontal line (no zigzag)
+  for (let i = 0; i < stationCount; i++) {
+    const x = marginX + (i * stationSpacing);
+    points.push({ x, y: baseY });
   }
 
   return points;

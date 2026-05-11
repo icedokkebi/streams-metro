@@ -253,14 +253,15 @@ export const MetroMap: React.FC<MetroMapProps> = ({ lines, onStationClick, canIn
             </g>
           ))}
 
-        {/* Line legend in top-right corner */}
+        {/* Line legend in bottom-left corner */}
         {lines.map((line, idx) => {
-          const legendX = width - 140; // Position from right edge
+          const legendX = 20; // Position from left edge
+          const legendY = height - 60 - (lines.length - 1 - idx) * 40; // Bottom up
           return (
             <g key={`legend-${line.id}`}>
               <rect
                 x={legendX}
-                y={20 + idx * 40}
+                y={legendY}
                 width="120"
                 height="32"
                 rx="16"
@@ -272,13 +273,13 @@ export const MetroMap: React.FC<MetroMapProps> = ({ lines, onStationClick, canIn
               />
               <circle
                 cx={legendX + 18}
-                cy={36 + idx * 40}
+                cy={legendY + 16}
                 r="8"
                 fill={line.color}
               />
               <text
                 x={legendX + 35}
-                y={36 + idx * 40}
+                y={legendY + 16}
                 dominantBaseline="middle"
                 fill={line.color}
                 fontSize="14"
@@ -287,7 +288,7 @@ export const MetroMap: React.FC<MetroMapProps> = ({ lines, onStationClick, canIn
                 {line.name}
               </text>
               {line.completed && (
-                <text x={legendX + 95} y={36 + idx * 40} fontSize="18" dominantBaseline="middle">
+                <text x={legendX + 95} y={legendY + 16} fontSize="18" dominantBaseline="middle">
                   ✓
                 </text>
               )}
